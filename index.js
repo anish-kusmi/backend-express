@@ -5,11 +5,8 @@ const chats = require('./data/data');
 const app = express();
 // const port = 5000;
 dotenv.config()
-const PORT = process.env.PORT ;
-// console.log(PORT);
-
+const PORT = process.env.PORT;
 dbConnect();
-
 //common js model(require garnuparxa )
 //ES6 modal(ECMA script modal) (import garnu parxa)
 

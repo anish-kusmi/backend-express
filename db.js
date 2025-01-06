@@ -3,6 +3,6 @@ const mongoose= require('mongoose')
 
 const dbConnect= ()=>{
     mongoose.connect(process.env.Mongo_URI)
-    .then(()=>console.log("mongoDB conncected Successfully"))
+    .then(()=>console.log("MongoDB Connected Successfully!!!"))
 };
 module.exports = dbConnect;
