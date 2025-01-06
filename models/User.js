@@ -3,20 +3,20 @@ const Schema = mongoose.Schema
 const userSchema= new Schema({
     name: {
         type: String,
-        required: true,   
-    },
-    email: {
+        required: true,
+      },
+      email: {
         type: String,
-        required: true,   
-    },
-    password: {
+        required: true,
+      },
+      password: {
         type: String,
-        required: true,   
-    },
-    date: {
+        required: true,
+      },
+      date: {
         type: Date,
-        default: Date.now 
-    }
-});
-const User = mongoose.model('User',userSchema)
-module.exports= User
+        default: Date.now,
+      },
+    });
+    const User = mongoose.model("user", userSchema);
+    module.exports = User;

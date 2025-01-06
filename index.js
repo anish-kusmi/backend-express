@@ -1,18 +1,17 @@
 const express = require('express');
-const dotenv= require('dotenv');
+const app = express();
 const dbConnect = require("./db");
 const chats = require('./data/data');
-const app = express();
-// const port = 5000;
-dotenv.config()
-const PORT = process.env.PORT;
-dbConnect();
-//common js model(require garnuparxa )
-//ES6 modal(ECMA script modal) (import garnu parxa)
+const port = 5000;
+// const dotenv= require('dotenv');
+// dotenv.config()
+// const PORT = process.env.PORT;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+dbConnect();
+app.use(express.json());
+app.get("/", (req, res) => {
+  res.send('Hello World!');
+});
 
   app.get('/chats', (req, res) => {
     res.send(chats)
@@ -26,8 +25,8 @@ app.get('/', (req, res) => {
  app.use('/api/auth', require("./routes/Auth"));
 //  app.use('/api/product', require("./routes/product"));
 
-app.listen(PORT, () => {
-  console.log(`MY app listening on port ${PORT}`)
+app.listen(port, () => {
+  console.log(`MY app listening on port ${port}`)
 })
 
 
