@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const { body, validationResult}= require('express-validator')
 // require('dotenv').config();
 const dotenv= require('dotenv');
+const fecthUser = require('../middleware/Fetchuser')
 dotenv.config();
 
 
@@ -12,6 +13,8 @@ const router = express.Router()
 // const JWT_SECRET = "heisagoodboy"
 const jwtSecret = process.env.JWT_SECRET;
 console.log("Your JWT secret is:", jwtSecret);
+
+//create user API
 router.post(
     "/createuser",
     [
@@ -39,16 +42,63 @@ router.post(
         });
         const data={
            user:{
-            id:user.id,
+            id:user._id,
            }
             
         }
         const authToken= jwt.sign(data, jwtSecret);
-        console.log(authToken);
+        // console.log(authToken);
         res.json({user,authToken});
         
     } catch (error) {
         res.status(500).send("internal server error");
+    }
+});
+
+
+// Login API
+router.post(
+    "/login",
+    [body("email").isEmail(), body("password").isLength({ min:8})],
+    async(req,res)=>{
+        const errors= validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({ errors:errors.array()});
+        }
+        const {email, password}=req.body;
+        try{
+            let user = await user.findOne({email});
+            if(!user){
+                return res.status(400).json ({error: "user not found"});
+            }
+            const comparePassword = await bcrypt.compare(password, user.password);
+            if(!comparePassword){
+                return res.status(400).json({error: "password does not matched"});
+            }
+            const data={
+                user:{
+                    id: user._id,
+                },
+            };
+            const authToken= jwt.sign(data, jwtSecret);
+            res.json({user,authToken});
+        } catch(error){
+            res.status(500).send("internal server error");
+        }
+    }
+);
+
+
+//get user API 
+router.get("/getuser", fecthUser, async(req,res)=>{
+    try{
+        const userId= req.user.id;
+        console.log("User ID :",userId);
+        
+        const user= await User.findById(userId).select ("-password");
+        res.json(user);
+    } catch(error){
+        res.status(500)  ("internal server error");
     }
 });
 
