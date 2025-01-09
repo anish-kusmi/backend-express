@@ -22,6 +22,7 @@ app.get("/", (req, res) => {
     const singleChat = chats.find((c)=> c._id === req.params.id);
     res.send(singleChat);
  });
+ 
  app.use('/api/auth', require("./routes/Auth"));
  app.use('/api/product', require("./routes/Product"));
 

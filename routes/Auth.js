@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const { body, validationResult}= require('express-validator')
 // require('dotenv').config();
 const dotenv= require('dotenv');
-const fecthUser = require('../middleware/Fetchuser')
+const fecthUser = require('../middleware/Fecthuser')
 dotenv.config();
 
 
@@ -20,7 +20,7 @@ router.post(
     [
       body("name").isLength({ min: 3 }),
       body("email").isEmail(),
-      body("password").isLength({ min: 8 }),
+      body("password").isLength({ min: 5 }),
     ],
     async (req, res) => {
       const errors = validationResult(req);
