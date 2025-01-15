@@ -59,34 +59,35 @@ router.post(
 // Login API
 router.post(
     "/login",
-    [body("email").isEmail(), body("password").isLength({ min:8})],
-    async(req,res)=>{
-        const errors= validationResult(req);
-        if(!errors.isEmpty()){
-            return res.status(400).json({ errors:errors.array()});
+    [body("email").isEmail(), body("password").isLength({ min: 8 })],
+    async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      const { email, password } = req.body;
+      try {
+        let user = await User.findOne({ email });
+        if (!user) {
+          return res.status(400).json({ error: "pls regsiter your email first" });
         }
-        const {email, password}=req.body;
-        try{
-            let user = await user.findOne({email});
-            if(!user){
-                return res.status(400).json ({error: "user not found"});
-            }
-            const comparePassword = await bcrypt.compare(password, user.password);
-            if(!comparePassword){
-                return res.status(400).json({error: "password does not matched"});
-            }
-            const data={
-                user:{
-                    id: user._id,
-                },
-            };
-            const authToken= jwt.sign(data, jwtSecret);
-            res.json({user,authToken});
-        } catch(error){
-            res.status(500).send("internal server error");
+        const comparePassword = await bcrypt.compare(password, user.password);
+        if (!comparePassword) {
+          return res.status(400).json({ error: "password doesn't match" });
         }
+        const data = {
+          user: {
+            id: user._id,
+          },
+        };
+        const authToken = jwt.sign(data, jwtSecret);
+        // console.log(authToken);
+        res.json({ user, authToken });
+      } catch (error) {
+        res.status(500).send("internal server error");
+      }
     }
-);
+  );
 
 
 //get user API 
